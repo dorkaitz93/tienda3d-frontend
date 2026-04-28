@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-@source "../**/*.{vue,ts}";
+/* Prueba a poner la ruta absoluta desde la raíz para que no haya dudas */
+@source "../../src";
 
 @layer components {
   .router-link-exact-active {

@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.4",
+    "@tailwindcss/vite": "^4.2.4",
     "@tsconfig/node24": "^24.0.4",
     "@types/jsdom": "^28.0.1",
     "@types/node": "^24.12.2",
