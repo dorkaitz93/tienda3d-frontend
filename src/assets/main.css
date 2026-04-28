@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@source "../**/*.{vue,ts}";
+
+@layer components {
+  .router-link-exact-active {
+    @apply underline font-semibold transition-all text-blue-600;
+  }
+}
