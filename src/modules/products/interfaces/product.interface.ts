@@ -1,3 +1,4 @@
+
 export interface ProductResponse {
     current_page:   number;
     data:           Product[];
@@ -18,6 +19,7 @@ export interface Product {
     id:          number;
     category_id: number;
     name:        string;
+    image:       string;
     slug:        string;
     description: string;
     price:       string;
