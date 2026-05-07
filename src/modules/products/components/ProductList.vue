@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 
-import type { product } from '../interfaces/product.interface';
+import type { Product } from '../interfaces/product.interface';
 import ProductCard from './ProductCard.vue';
 
 interface Props{ 
