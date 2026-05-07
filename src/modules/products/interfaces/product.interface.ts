@@ -19,7 +19,7 @@ export interface Product {
     id:          number;
     category_id: number;
     name:        string;
-    image:       string;
+    images:      string;
     slug:        string;
     description: string;
     price:       string;

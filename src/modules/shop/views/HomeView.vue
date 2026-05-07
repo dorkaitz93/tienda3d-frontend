@@ -41,7 +41,7 @@
 <ProductList v-else :products="products" />
   
   <ButtonPagination 
-	:has-more-data="products?.length === 10 || false"
+	:has-more-data="page < lastPage"
 	:is-firts-page="page === 1"
 	:page="page"
   />
@@ -51,26 +51,41 @@
   <script lang="ts" setup>
 
 import ButtonPagination from '@/modules/common/components/ButtonPagination.vue';
-import { getProductsAction } from '@/modules/products/actions';
+import { getProductsAction, lastPage } from '@/modules/products/actions';
 import ProductList from '@/modules/products/components/ProductList.vue';
-import { useQuery } from '@tanstack/vue-query';
-import { ref, watch } from 'vue';
+import { useQuery, useQueryClient } from '@tanstack/vue-query';
+import { ref, watch, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 
 	const route = useRoute();
 	const page = ref(Number(route.query.page || 1));
+	const queryClient = useQueryClient();
 
+	const { data:products = [] } = useQuery({
+    queryKey:['products', { page }],
+    queryFn: () => getProductsAction(page.value)
+   });
 
 	watch(
 	() => route.query.page,
 	(newPage) => {
 		page.value = Number(newPage || 1);
+
+		window.scrollTo({
+		 top: 0,
+		 behavior: 'smooth'
+		})
 	}
 	);
 
-   const { data:products = [] } = useQuery({
-    queryKey:['products', { page }],
-    queryFn: () => getProductsAction(page.value)
-   })
+	watchEffect(() => {
+		queryClient.prefetchQuery({
+			queryKey:['products', { page: page.value + 1 }],
+			queryFn: () => getProductsAction(page.value + 1)
+		});
+
+	});
+
+   
 
   </script>
