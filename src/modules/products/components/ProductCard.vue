@@ -3,7 +3,7 @@
       <a href="#">
         <div class="relative flex items-end overflow-hidden rounded-xl">
           <img :src="product.images[0]" :alt="product.name" 
-            class="h-[300px] object-cover"
+            class="object-cover"
           />
         </div>
 
