@@ -39,7 +39,7 @@ const route = useRoute();
 const onPageChange = (newPage: number) => {
   router.push({ 
     query: { 
-      ...route.query, // Mantiene la categoría actual
+      ...route.query,
       page: newPage 
     } 
   });
