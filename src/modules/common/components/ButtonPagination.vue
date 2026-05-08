@@ -24,7 +24,7 @@
 <script lang="ts" setup>
 import ArrowLeftIcon from '@/icons/ArrowLeftIcon.vue';
 import ArrowRightIcon from '@/icons/ArrowRightIcon.vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 interface Props{
     page: number;
@@ -34,13 +34,14 @@ interface Props{
 
 const props = defineProps<Props>();
 const router = useRouter();
+const route = useRoute();
 
 const onPageChange = (newPage: number) => {
-    if (newPage <= 0) return;
-    
-   
-    router.push({
-        query: { page: newPage }
-    });
+  router.push({ 
+    query: { 
+      ...route.query, // Mantiene la categoría actual
+      page: newPage 
+    } 
+  });
 };
 </script>
