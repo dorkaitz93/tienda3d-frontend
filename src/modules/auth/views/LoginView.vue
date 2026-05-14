@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, watchEffect } from 'vue';
 import { useAuthStore } from '../stores/auth.store';
 import { useToast } from 'vue-toastification';
 
@@ -107,4 +107,14 @@ const onLogin = async() => {
 
  toast.error('el usuario o contraseña introducidos no son correctos');
 };
+
+watchEffect(() => {
+  const email = localStorage.getItem('email');
+
+  if(email){
+    myForm.email = email;
+    myForm.rememberMe = true;
+  }
+});
+
 </script>
