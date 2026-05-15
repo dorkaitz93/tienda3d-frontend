@@ -23,7 +23,7 @@ import type { AuthResponse, User } from "../interfaces"
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
-            body: JSON.stringify({ name: name, email, password }) 
+            body: JSON.stringify({ name, email, password }) 
         });
 
         if(response.status === 400 || response.status === 422){

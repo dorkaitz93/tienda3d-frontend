@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import { AuthStatus, type User } from '../interfaces';
-import { loginAction } from '../actions';
+import { checkAuthAction, loginAction } from '../actions';
 import { useLocalStorage } from '@vueuse/core';
 import { registerAction } from '../actions/register.action';
 
@@ -42,17 +42,37 @@ export const useAuthStore = defineStore('auth', () => {
       const registerResp = await registerAction(name, email, password);
       if (!registerResp.ok) {
         return { ok: false, message: registerResp.message };
+      }
 
         user.value = registerResp.user;
         token.value = registerResp.token;
         authStatus.value = AuthStatus.Authenticated;
 
         return { ok: true, message: '' };
-      }
-    } catch (error) {
-      return { ok: false, message: 'Error inesperado al registrar' };
+      }catch (error) {
+      return { ok: false, message: 'No se pudo registrar el usuario' };
     }
   };
+
+  const checkAuthstatus = async(): Promise<boolean> =>{
+    try {
+      const statusResp = await checkAuthAction();
+
+      if(!statusResp.ok){
+        logout();
+        return false;
+      }
+
+      authStatus.value = AuthStatus.Authenticated;
+      user.value = statusResp.user;
+      token.value = statusResp.token;
+      return true
+
+    } catch (error) {
+      logout();
+      return false;
+    }
+  }
 
   return {
     user,
@@ -69,5 +89,6 @@ export const useAuthStore = defineStore('auth', () => {
     //accione
     login,
     register,
+    checkAuthstatus,
   };
 });
