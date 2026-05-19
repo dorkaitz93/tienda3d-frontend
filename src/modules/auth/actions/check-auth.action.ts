@@ -23,11 +23,11 @@ export const checkAuthAction = async (): Promise<checkError|checkSucces> =>{
 
     return{
         ok:true,
-        user: data.user,
+        user: data as any,
         token: data.token ?? localToken
     };
     }catch(error: any){
-        if(error.message === 'Unauthorized' && error.message.includes('401')){
+        if(error.message === 'Unauthorized' || error.message.includes('401')){
             return{
                 ok:false,
 

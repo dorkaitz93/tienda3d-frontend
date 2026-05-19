@@ -13,7 +13,7 @@ const isAuthenticatedGuard = async (
             await authStore.checkAuthstatus();
         }
     
-        if (authStore.authStatus === AuthStatus.Authenticated) {
+        if (authStore.authStatus === AuthStatus.UnAuthenticated) {
         return { name: 'home' };
     }
     
