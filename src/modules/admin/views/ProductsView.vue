@@ -7,7 +7,7 @@
         <table class="min-w-full bg-white">
           <thead class="bg-gray-800 text-white">
             <tr>
-              <th class="w-1/4 text-left py-3 px-4 uppercase font-semibold text-sm">Imagen</th>
+              <th class="w-10 text-left py-3 px-4 uppercase font-semibold text-sm">Imagen</th>
               <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm">Nombre</th>
               <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm">Descripcion</th>
               <th class="w-1/6 text-left py-3 px-4 uppercase font-semibold text-sm">Precio</th>
@@ -31,20 +31,23 @@
                   v-if="product.images?.[0]"
                   :src="product.images[0]"
                   :alt="product.name"
-                  class="w-12 h-16 object-cover rounded shadow-sm bg-gray-100"
+                  class=" w-15 object-cover rounded shadow-sm bg-gray-100"
                 />
-                <span v-else class="text-gray-400 text-xs">Sin imagen</span>
               </td>
 
               <td class="text-left py-3 px-4 font-medium text-gray-900">
-                {{ product.name }}
+                <RouterLink :to ="`/admin/products/${product.id}`"
+                class="hover:text-blue-500 hover:underline"
+                >
+                  {{ product.name }}
+                </RouterLink>
               </td>
 
               <td class="text-left py-3 px-4 font-medium text-gray-900">
                 {{ product.description }}
               </td>
 
-              <td class="text-left py-3 px-4 font-semibold text-blue-600">
+              <td class="text-left py-3 px-4 font-semibold text-gray-900">
                 ${{ product.price }}
               </td>
 
@@ -71,51 +74,42 @@
                 {{ product.stock }}
               </span>
             </td>
-
             </tr>
           </tbody>
         </table>
+        <ButtonPagination :page="page"
+          :has-more-data="page < lastPage"
+          :is-firts-page="page === 1"
+        />
       </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 
-    import { computed, watch, watchEffect } from 'vue';
-    import { useRoute} from 'vue-router';
+    import { watchEffect } from 'vue';
     import { useQuery, useQueryClient } from '@tanstack/vue-query';
-    import { getProductsAction } from '@/modules/products/actions';
+    import { getProductsAction, lastPage } from '@/modules/products/actions';
+    import ButtonPagination from '@/modules/common/components/ButtonPagination.vue';
+    import { usePagination } from '@/modules/common/composables/usePagination';
 
-    const route = useRoute();
 
     const queryClient = useQueryClient();
 
-    const page = computed(() => Number(route.query.page || 1));
-    const search = computed(() => route.query.search?.toString() || '');
+    const {page,search,selectedCategory} = usePagination();
+    
 
-    const selectedCategory = computed(() => route.query.category_id?.toString() || '');
 
     const { data: products, isLoading } = useQuery<any>({
     queryKey: ['products', { page: page, category_id: selectedCategory, search: search }],
     queryFn: () => getProductsAction(page.value, selectedCategory.value, search.value)
     });
 
-        watch(
-    () => route.query.page,
-    () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-
+     
     watchEffect(() =>{
       queryClient.prefetchQuery({
           queryKey: ['products', { page: page.value + 1, category_id: selectedCategory.value, search: search.value }],
           queryFn: () => getProductsAction(page.value + 1, selectedCategory.value, search.value)
     });
   })
-
-
-
-
-
 </script>
