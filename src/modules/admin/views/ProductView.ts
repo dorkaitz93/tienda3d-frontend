@@ -18,8 +18,9 @@ const validationSchema = yup.object({
     price: yup.number().required().min(1),
     stock: yup.number().required().min(1),
     gender: yup.string().required(),
-    size: yup.string().nullable(),
     dimensions: yup.string().nullable(),
+
+    sizes: yup.array(),
 });
 
 export default defineComponent({
@@ -57,7 +58,6 @@ export default defineComponent({
         const [price, priceAttrs] = defineField('price');
         const [stock, stockAttrs] = defineField('stock');
         const [gender, genderAttrs] = defineField('gender');
-        const [size, sizeAttrs] = defineField('size');
         const [dimensions, dimensionsAttrs] = defineField('dimensions');
 
 
@@ -94,10 +94,17 @@ export default defineComponent({
         
         watch(product, () => {
 
-            if( !product ) return;
+            if( !product.value ) return;
+            const p = product.value;
+
+            const {size, ...rest} = p
 
             resetForm({
-                values: product.value
+                values: {
+                    sizes: size ? (Array.isArray(size) ? size : [size]) : [],
+
+                    ...rest
+                }
             });
         },
         {
@@ -124,8 +131,6 @@ export default defineComponent({
             stockAttrs,
             gender,
             genderAttrs,
-            size,
-            sizeAttrs,
             dimensions,
             dimensionsAttrs,
 

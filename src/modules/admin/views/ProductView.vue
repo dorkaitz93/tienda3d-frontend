@@ -55,7 +55,7 @@
           </div>
         </div>
 
-        <div v-if="values.size" class="mb-4">
+        <div v-if="values.sizes" class="mb-4">
           <label  class="form-label">Tallas</label>
             <div class ="flex">
                 <button v-for="size in allSizes" :key="size"
@@ -63,7 +63,7 @@
                 type="button" class="bg-blue-100 hover:bg-blue-300 cursor-pointer p-2 rounded w-14 mr-2 flex-1">{{ size }}</button>
             </div>      
         </div>
-        <div class="mb-4" v-if="!values.size">
+        <div class="mb-4" v-if="!values.sizes || values.sizes.length === 0">
             <label class="form-label">Dimensiones</label>
             <CustomInput 
               v-model="dimensions"
