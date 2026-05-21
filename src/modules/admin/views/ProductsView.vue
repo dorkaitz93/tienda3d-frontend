@@ -105,7 +105,6 @@
     queryFn: () => getProductsAction(page.value, selectedCategory.value, search.value)
     });
 
-     
     watchEffect(() =>{
       queryClient.prefetchQuery({
           queryKey: ['products', { page: page.value + 1, category_id: selectedCategory.value, search: search.value }],
