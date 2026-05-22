@@ -18,9 +18,9 @@ const validationSchema = yup.object({
     price: yup.number().required().min(1),
     stock: yup.number().required().min(1),
     gender: yup.string().required(),
-    dimensions: yup.string().nullable(),
+    dimensions: yup.string().required(),
 
-    sizes: yup.array(),
+    sizes: yup.array().required(),
 });
 
 export default defineComponent({
@@ -46,7 +46,7 @@ export default defineComponent({
             retry: false,
         })
 
-        const { values, defineField, errors, handleSubmit, resetForm} = useForm({
+        const { values, defineField, errors, handleSubmit, resetForm, meta} = useForm({
             validationSchema,
         });
 
@@ -117,6 +117,7 @@ export default defineComponent({
             //properties
             values,
             errors,
+            meta,
 
 
             name,
@@ -144,6 +145,12 @@ export default defineComponent({
 
             onSubmit,
             toggleSize,
+
+
+            hasSize: (size: string) => {
+                const currentSizes = sizes.value.map(s=>s.value);
+                return currentSizes.includes(size)
+            }
         };
     },
 })

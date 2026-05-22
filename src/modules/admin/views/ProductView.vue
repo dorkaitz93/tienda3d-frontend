@@ -1,7 +1,7 @@
 <template>
   <div> 
     <div class="bg-white px-5 py-2 rounded">
-      <h1 class="text-3xl">Producto: <small class="text-blue-500">nombre</small></h1>
+      <h1 class="text-3xl">Producto: <small class="text-blue-500">{{name}}</small></h1>
       <hr class="my-4" />
     </div>
 
@@ -55,15 +55,21 @@
           </div>
         </div>
 
-        <div v-if="values.sizes" class="mb-4">
+        <div v-if="values.sizes && values.sizes.length > 0 " class="mb-4">
           <label  class="form-label">Tallas</label>
             <div class ="flex">
                 <button v-for="size in allSizes" :key="size"
                 @click="toggleSize(size)"
-                type="button" class="bg-blue-100 hover:bg-blue-300 cursor-pointer p-2 rounded w-14 mr-2 flex-1">{{ size }}</button>
+                type="button" 
+                :class="['cursor-pointer p-2 rounded w-14 mr-2 flex-1', {
+                  'bg-blue-500 text-white:' :hasSize(size),
+                  'bg-blue-100' : !hasSize(size)
+                }]">
+                {{ size }}
+              </button>
             </div>      
         </div>
-        <div class="mb-4" v-if="!values.sizes || values.sizes.length === 0">
+        <div class="mb-4" v-else>
             <label class="form-label">Dimensiones</label>
             <CustomInput 
               v-model="dimensions"
@@ -108,13 +114,16 @@
       </div>
     </form>
 
-    <div class="grid grid-cols-2 mt-2">
-      <pre class="bg-blue-200 p-2">
+    <div class="grid grid-cols-2 mt-2 flex-1" >
+      <pre class="bg-blue-400 p-2">
         {{JSON.stringify(values, null, 2)}}
       </pre>
-      <div class="bg-red-200 p-2">
-        {{ errors }}
-      </div>
+      <pre class="bg-red-400 p-2">
+        {{JSON.stringify(errors, null, 2)}}
+      </pre>
+      <pre class="bg-green-400 p-2 col-span-2">
+        {{JSON.stringify(meta, null, 2)}}
+      </pre>
     </div>
 
   </div>
@@ -126,7 +135,7 @@
 
 <style scoped>
 
-@reference "tailwindcss";
+
 .form-label {
   @apply block text-gray-500 text-sm font-bold mb-2;
 }
