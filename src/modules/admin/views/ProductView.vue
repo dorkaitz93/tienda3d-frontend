@@ -137,6 +137,8 @@
 
 
 .form-label {
+
+  @reference "tailwindcss";
   @apply block text-gray-500 text-sm font-bold mb-2;
 }
 .form-control {

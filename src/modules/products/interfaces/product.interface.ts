@@ -16,10 +16,10 @@ export interface ProductResponse {
 }
 
 export interface Product {
-    id:          number;
+    id:          number | string;
     category_id: number;
     name:        string;
-    images:      string;
+    images:      string[];
     slug:        string;
     description: string;
     price:       string;

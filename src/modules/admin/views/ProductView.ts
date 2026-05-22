@@ -1,6 +1,6 @@
 import { useFieldArray, useForm } from 'vee-validate';
 
-import { getProductById } from "@/modules/products/actions";
+import { createUpdateProductAction, getProductById } from "@/modules/products/actions";
 import { useQuery } from "@tanstack/vue-query";
 import { defineComponent,  watch,  watchEffect } from "vue";
 import { useRouter } from "vue-router";
@@ -18,9 +18,12 @@ const validationSchema = yup.object({
     price: yup.number().required().min(1),
     stock: yup.number().required().min(1),
     gender: yup.string().required(),
-    dimensions: yup.string().required(),
-
-    sizes: yup.array().required(),
+    dimensions: yup.string().nullable().when('sizes',{
+        is: (sizes: string[]) => !sizes || sizes.length === 0,
+        then: (schema) => schema.required('Las dimensiones son obligatorias para las figuras.'),
+        otherwise: (schema) => schema.nullable(),
+    }),
+    sizes: yup.array(),
 });
 
 export default defineComponent({
@@ -65,9 +68,9 @@ export default defineComponent({
         const {fields: images} = useFieldArray<string>('images');
 
 
-        const onSubmit = handleSubmit((value) => {
-
-            console.log({value});
+        const onSubmit = handleSubmit(async(value) => {
+            const product = await createUpdateProductAction(value);
+            console.log({product});
         })
 
 
