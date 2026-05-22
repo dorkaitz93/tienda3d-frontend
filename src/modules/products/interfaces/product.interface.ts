@@ -22,11 +22,12 @@ export interface Product {
     images:      string[];
     slug:        string;
     description: string;
-    price:       string;
+    price:       number;
     stock:       number;
     size:        null | string;
     material:    Material;
     dimensions:  null | string;
+    gender:      null| string
     category:    Category;
 }
 

@@ -55,29 +55,45 @@
           </div>
         </div>
 
-        <div v-if="values.sizes && values.sizes.length > 0 " class="mb-4">
-          <label  class="form-label">Tallas</label>
-            <div class ="flex">
-                <button v-for="size in allSizes" :key="size"
-                @click="toggleSize(size)"
-                type="button" 
-                :class="['cursor-pointer p-2 rounded w-14 mr-2 flex-1', {
-                  'bg-blue-500 text-white:' :hasSize(size),
-                  'bg-blue-100' : !hasSize(size)
-                }]">
-                {{ size }}
-              </button>
-            </div>      
-        </div>
-        <div class="mb-4" v-else>
-            <label class="form-label">Dimensiones</label>
-            <CustomInput 
-              v-model="dimensions"
-              v-bind="dimensionsAttrs"
-              :error="errors.dimensions"
-            />
+        <div class="mb-6">
+          <label class="form-label">Tipo de Producto</label>
+          <div class="flex gap-4 mt-2 mb-4">
+              <label class="inline-flex items-center">
+                  <input type="radio" v-model="categoryId" :value="2" class="form-radio text-blue-500">
+                  <span class="ml-2">Camiseta</span>
+              </label>
+              <label class="inline-flex items-center">
+                  <input type="radio" v-model="categoryId" :value="1" class="form-radio text-blue-500">
+                  <span class="ml-2">Figura 3D</span>
+              </label>
           </div>
       </div>
+
+      <div v-if="categoryId === 2" class="mb-4">
+          <label class="form-label">Tallas</label>
+          <div class="flex">
+              <button v-for="size in allSizes" :key="size"
+                  @click="toggleSize(size)"
+                  type="button" 
+                  :class="['cursor-pointer p-2 rounded w-14 mr-2 flex-1 transition-colors', {
+                    'bg-blue-500 text-white': hasSize(size),
+                    'bg-blue-100 text-gray-700 hover:bg-blue-300': !hasSize(size)
+                  }]">
+                  {{ size }}
+              </button>
+          </div>      
+      </div>
+
+      <div v-if="categoryId === 1" class="mb-4">
+          <label class="form-label">Dimensiones</label>
+          <CustomInput 
+            v-model="dimensions"
+            v-bind="dimensionsAttrs"
+            :error="errors.dimensions"
+          />
+      </div>
+    </div>
+    
 
       <div class="first-col">
         <label for="stock" class="form-label">Imágenes</label>
@@ -92,7 +108,7 @@
           <input multiple type="file" id="image" class="form-control" />
         </div>
 
-        <div class="mb-4">
+        <div v-if="categoryId === 2" class="mb-4">
           <label for="gender" class="form-label">Género</label>
           <select v-model="gender" v-bind="genderAttrs" class="form-control">
             <option value="">Seleccione</option>
@@ -102,11 +118,20 @@
           </select>
           <span class="text-red-500" v-if="errors.gender">{{ errors.gender }}</span>
         </div>
+        <div v-if="categoryId === 1" class="mb-4">
+        <label class="form-label">Material</label>
+        <CustomInput 
+          v-model="material"
+          v-bind="materialAttrs"
+          :error="errors.material"
+        />
+      </div>
 
         <div class="my-4 text-right">
           <button
+            :disabled="isPending"
             type="submit"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            class=" disabled:bg-gray-500 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             Guardar
           </button>
