@@ -97,15 +97,27 @@
 
       <div class="first-col">
         <label for="stock" class="form-label">Imágenes</label>
-        <div class="flex p-2 overflow-x-auto space-x-8 w-full h-[265px] bg-gray-200 rounded">
-          <div v-for="image in images" :key="image.value" class="flex-shrink-0">
-            <img :src="image.value" :alt="name" class="w-[250px] h-[250px]" />
+
+        <div class="flex p-2 overflow-x-auto space-x-8 w-full h-70 bg-gray-200 rounded">
+          <div v-for="image of images" :key="image.value" class="shrink-0">
+            <img :src="image.value" :alt="name" class="w-82 h-62.5" />
           </div>
+
+          <div v-for="imageFile of imageFiles" :key="imageFile.name" class="shrink-0">
+            <img :src="temporalImageUrl(imageFile)" :alt="imageFile.name" class="w-77 h-62.5 " />
+          </div>
+
         </div>
         
         <div class="col-span-2 my-2">
           <label for="image" class="form-label">Subir imagen</label>
-          <input multiple type="file" id="image" class="form-control" />
+          <input multiple type="file" 
+          id="image" 
+          class="form-control" 
+          accept="image/*" 
+          @change="onFileChanged"
+          
+          />
         </div>
 
         <div v-if="categoryId === 2" class="mb-4">

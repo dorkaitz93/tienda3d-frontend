@@ -20,8 +20,12 @@ const validationSchema = yup.object({
     description: yup.string().required(),
     price: yup.number().required().min(1),
     stock: yup.number().required().min(1),
-    gender: yup.string().required(),
-    dimensions: yup.string().nullable().when('sizes',{
+    gender: yup.string().when('category_id',{
+        is:2,
+        then:(schema) => schema.required('el genero es obligatorio'),
+        otherwise: (schema) => schema.nullable().notRequired(),
+    }),
+    dimensions: yup.string().nullable().when('category_id',{
         is: (sizes: string[]) => !sizes || sizes.length === 0,
         then: (schema) => schema.required('Las dimensiones son obligatorias para las figuras.'),
         otherwise: (schema) => schema.nullable(),
@@ -82,11 +86,17 @@ export default defineComponent({
 
 
         const {fields: sizes, remove: removeSize, push:pushSize} = useFieldArray<string>('sizes');
+        
         const {fields: images} = useFieldArray<string>('images');
-
+        const imageFiles = ref<File[]>([]);
 
         const onSubmit = handleSubmit(async(values) => {
-           mutate(values); 
+
+            const productToSave = {
+                ...values,
+                image: imageFiles.value[0] || null
+            }
+            mutate(productToSave as any); 
             
         });
 
@@ -102,6 +112,19 @@ export default defineComponent({
                 pushSize(size);
             }
 
+        };
+
+        const onFileChanged = (event: Event) =>{
+            const fileInput = event.target as HTMLInputElement;
+            const filesList = fileInput.files;
+
+            if(!filesList) return;
+            if(filesList.length === 0) return;
+
+            for (const imageFile of filesList){
+
+                imageFiles.value.push(imageFile)
+            }
         }
 
 
@@ -117,7 +140,7 @@ export default defineComponent({
             if( !product.value ) return;
             const p = product.value;
 
-            const {size, ...rest} = p
+            const {size,category,images, ...rest} = p
 
             resetForm({
                 values: {
@@ -138,12 +161,16 @@ export default defineComponent({
             if(!value) return
 
             toast.success('Producto Actualizado Correctamente');
+            const productData = updatedProduct.value?.data;
 
+            if (productData) {
 
-            //TODO: redireccion cuando se crea
-            resetForm({
-                values: updatedProduct.value,
-            })
+                router.replace(`/admin/products/${productData.id}`);
+
+                resetForm({
+                    values: productData,
+                });
+            }
 
         });
 
@@ -179,6 +206,8 @@ export default defineComponent({
 
             sizes,
             images,
+            imageFiles,
+            onFileChanged,
 
             isPending,
 
@@ -195,6 +224,10 @@ export default defineComponent({
             hasSize: (size: string) => {
                 const currentSizes = sizes.value.map(s=>s.value);
                 return currentSizes.includes(size)
+            },
+
+            temporalImageUrl: (imageFile: File) =>{
+                return URL.createObjectURL(imageFile);
             }
         };
     },
