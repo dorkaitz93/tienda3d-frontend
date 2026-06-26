@@ -16,6 +16,12 @@ const router = createRouter({
           name: 'home',
           component: () => import("@/modules/shop/views/HomeView.vue"),
         },
+        {
+          path: 'producto/:id',
+          name: 'product-detail',
+          // Asegúrate de que esta ruta coincida con dónde guardaste el archivo
+          component: () => import("@/modules/shop/views/ProductDetailView.vue"), 
+        }
       ],
     },
 

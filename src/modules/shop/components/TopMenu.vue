@@ -28,6 +28,16 @@
       </div>
 
       <div class="flex items-center md:order-2">
+
+        <RouterLink to="/cart" class="relative mr-3 sm:mr-5 text-gray-600 hover:text-blue-600 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-7 sm:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          
+          <span class="absolute -top-1.5 -right-2 flex h-4 w-4 sm:h-5 sm:w-5 items-center justify-center rounded-full bg-red-500 text-[9px] sm:text-[10px] font-bold text-white shadow-sm">
+            0
+          </span>
+        </RouterLink>
         
       <template v-if="!authStore.isAuthenticated"> 
         <RouterLink to="/auth/login"
@@ -62,7 +72,7 @@
 
           
 
-
+        
           <button 
             @click="isMenuOpen = !isMenuOpen"
             type="button" 
@@ -82,6 +92,7 @@
         id="navbar-sticky"
       >
         <ul class="mt-4 flex flex-col w-full rounded-lg border border-gray-100 bg-gray-50 p-4 md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-white md:text-sm md:font-medium">
+          
           <li>
             <RouterLink to="/" class="block rounded py-2 pl-3 pr-4 text-gray-700 hover:bg-gray-100 md:p-0 md:hover:bg-transparent md:hover:text-blue-700" active-class="text-blue-700 font-bold">
               Inicio
@@ -90,7 +101,35 @@
           <li><a href="#" class="block rounded py-2 pl-3 pr-4 text-gray-700 hover:bg-gray-100 md:p-0 md:hover:bg-transparent md:hover:text-blue-700">Nosotros</a></li>
           <li><a href="#" class="block rounded py-2 pl-3 pr-4 text-gray-700 hover:bg-gray-100 md:p-0 md:hover:bg-transparent md:hover:text-blue-700">Servicios</a></li>
           <li><a href="#" class="block rounded py-2 pl-3 pr-4 text-gray-700 hover:bg-gray-100 md:p-0 md:hover:bg-transparent md:hover:text-blue-700">Contacto</a></li>
+
+          <template v-if="!authStore.isAuthenticated">
+            <li class="md:hidden mt-2 border-t border-gray-200 pt-2">
+              <RouterLink to="/auth/login" class="block rounded py-2 pl-3 pr-4 text-blue-600 font-bold hover:bg-gray-100">
+                Login
+              </RouterLink>
+            </li>
+            <li class="md:hidden">
+              <RouterLink to="/auth/register" class="block rounded py-2 pl-3 pr-4 text-blue-600 font-bold hover:bg-gray-100">
+                Registro
+              </RouterLink>
+            </li>
+          </template>
+
+          <template v-if="authStore.isAuthenticated">
+            <li v-if="authStore.isAdmin" class="md:hidden mt-2 border-t border-gray-200 pt-2">
+              <RouterLink to="/admin" class="block rounded py-2 pl-3 pr-4 text-blue-600 font-bold hover:bg-gray-100">
+                Admin
+              </RouterLink>
+            </li>
+            <li class="md:hidden">
+              <button @click="authStore.logout()" class="block w-full text-left rounded py-2 pl-3 pr-4 text-red-600 font-bold hover:bg-gray-100">
+                Cerrar sesión
+              </button>
+            </li>
+          </template>
+
         </ul>
+        
       </div>
 
       </div>
